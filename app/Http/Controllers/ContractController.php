@@ -155,6 +155,7 @@ class ContractController extends Controller
             'tenants.*.is_holder' => ['required', 'boolean'],
         ]);
         $data['contract']['contractable_type'] = $data['contract']['type'] == 'Unit' ? Unit::class : Partition::class;
+        $data['contract']['discount'] = $data['contract']['discount'] ?? 0;
 
         $contract = DB::transaction(function () use ($data) {
             $tenants = collect($data['tenants']);
