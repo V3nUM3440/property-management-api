@@ -15,7 +15,9 @@ class UserController extends Controller
     public function index(Request $request): AppAnonymousResourceCollection
     {
 
-        $query = User::query();
+        $query = User::query()->whereHas('roles', function ($query) {
+            $query->where('name', '!=', 'super-admin');
+        });
 
         if ($keyword = $request->get('keyword')) {
             $query->where(function (Builder $q) use ($keyword) {
@@ -36,12 +38,9 @@ class UserController extends Controller
         if ($request->per_page == 'all') {
             return UserResource::collection($query->select(['id', 'name'])->get());
         }
-        
+
         $this->authorize('viewAny', User::class);
         $users = $query->with(['roles'])
-        ->whereHas('roles', function ($query) {
-            $query->where('name', '!=', 'super-admin');
-        })
         ->withCount(['units'])
         ->orderBy($request->order_by ?? 'name', $request->order_dir ?? 'asc')
         ->paginate($request->per_page ?? 15);
