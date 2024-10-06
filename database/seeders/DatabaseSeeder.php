@@ -14,15 +14,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([PermissionSeeder::class]);
 
-        User::factory()->superadmin()->create([
-            'name' => 'Admin',
-            'email' => 'admin@test.com',
+        $superadmin = User::create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@test.com',
+            'password' => '$2y$12$cOXwgFXQVCHtjQ8de4Lnb./K3GNdX7TnakS69eiFFEHQ/F8fEn.ma',
         ]);
-
-        // User::factory()->manager()->create([
-        //     'name' => 'Manager',
-        //     'email' => 'manager@test.com',
-        // ]);
+        $superadmin->assignRole('super-admin');
 
         // $this->call([BuildingSeeder::class]);
     }
