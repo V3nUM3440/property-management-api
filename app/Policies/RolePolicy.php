@@ -9,12 +9,12 @@ class RolePolicy
 {
     public function viewAny(User $user): bool
     {
-        return true; // return $user->can('view roles');
+        return $user->can('view roles');
     }
 
     public function view(User $user, Role $role): bool
     {
-        return $user->can('view roles');
+        return $user->can('view roles') && $role->name != 'super-admin';
     }
 
     public function create(User $user): bool
