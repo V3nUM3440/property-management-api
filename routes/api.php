@@ -20,7 +20,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['prefix' => 'dashboard'], function () {
         Route::get('/counts', [DashboardController::class, 'counts'])->name('dashboard.counts');
         Route::get('/contracts-ending', [DashboardController::class, 'contractsEnding'])->name('dashboard.contracts-ending');
-        Route::get('/occupancy', [DashboardController::class, 'occupancy'])->name('dashboard.occupancy');
+        Route::get('/occupancy-units', [DashboardController::class, 'occupancyUnits'])->name('dashboard.occupancy-units');
+        Route::get('/occupancy-partitions', [DashboardController::class, 'occupancyPartitions'])->name('dashboard.occupancy-partitions');
     });
     Route::get('/profile', [AuthController::class, 'profile'])->name('auth.profile');
     Route::post('/verify-password', [AuthController::class, 'verifyPassword'])->name('auth.verify-password');

@@ -16,13 +16,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-
-  $deposit = SecurityDeposit::with(['depositable'])->find(1);
-  return $deposit;
-
-  // $arr = [['name' => 1],['name' => 2],['name' => 3],['name' => 4],['name' => 5]];
-  // return collect($arr)->where('name', '>', 3);
-
   return [
     'message' => 'Welcome to the API',
   ];

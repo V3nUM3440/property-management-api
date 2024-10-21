@@ -25,11 +25,11 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function occupancy(): Response {
+    public function occupancyUnits(): Response {
         $buildings = Building::select(['id', 'name'])->withCount('units')->get();
 
         foreach ($buildings as $building) {
-            $units = Unit::where('building_id', $building->id)
+            $building->occupied_units = Unit::where('building_id', $building->id)
                 ->where(function ($query) {
                     $query->has('active_contract');
                     $query->orWhereHas('partitions', function ($query) {
@@ -37,7 +37,6 @@ class DashboardController extends Controller
                     });
                 }
             )->count();
-            $building->occupied_units = $units;
         }
 
         $buildings = $buildings->map(function ($building) {
@@ -45,6 +44,29 @@ class DashboardController extends Controller
                 'name' => $building->name,
                 'occupied_units' => $building->occupied_units,
                 'unoccupied_units' => $building->units_count - $building->occupied_units
+            ];
+        });
+
+        return response($buildings);
+    }
+
+    public function occupancyPartitions(): Response {
+        $buildings = Building::select(['id', 'name'])->withCount('partitions')->get();
+
+        foreach ($buildings as $building) {
+            $building->occupied_partitions = Partition::where(function ($query) {
+              $query->has('active_contract');
+            })
+            ->whereHas('building', function ($query) use ($building) {
+              $query->where('buildings.id', $building->id);
+            })->count();
+        }
+        
+        $buildings = $buildings->map(function ($building) {
+            return [
+                'name' => $building->name,
+                'occupied_partitions' => $building->occupied_partitions,
+                'unoccupied_partitions' => $building->partitions_count - $building->occupied_partitions
             ];
         });
 
