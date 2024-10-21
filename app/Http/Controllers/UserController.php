@@ -49,7 +49,7 @@ class UserController extends Controller
 
     public function show(User $user): UserResource
     {
-        $this->authorize('view', User::class);
+        $this->authorize('view', $user);
 
         $user->load(['roles.permissions', 'units' => function ($query) {
             $query->withCount('partitions');
@@ -95,7 +95,7 @@ class UserController extends Controller
 
     public function destroy(User $user): Response
     {
-        $this->authorize('delete', User::class);
+        $this->authorize('delete', $user);
 
         if (count($user->units) > 0) {
             return response([
