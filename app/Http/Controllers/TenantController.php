@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Resources\Core\AppAnonymousResourceCollection;
 use App\Http\Resources\TenantResource;
 use App\Models\Partition;
+use App\Models\Payment;
 use App\Models\Tenant;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class TenantController extends Controller
 {
@@ -136,5 +138,15 @@ class TenantController extends Controller
 
         $tenant->update($data);
         return new TenantResource($tenant);
+    }
+
+    public function destroy(Tenant $tenant): Response
+    {
+        $this->authorize('delete', $tenant);
+
+        Payment::whereIn('contract_id', $tenant->contracts()->pluck('id'))->delete();
+        $tenant->contracts()->forceDelete();
+        $tenant->forceDelete();
+        return response()->noContent();
     }
 }

@@ -52,6 +52,7 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'view tenants']);
         Permission::create(['name' => 'add tenants']);
         Permission::create(['name' => 'edit tenants']);
+        Permission::create(['name' => 'delete tenants']);
 
         Permission::create(['name' => 'view payments']);
         Permission::create(['name' => 'add payments']);
