@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\Core\AppAnonymousResourceCollection;
 use App\Http\Resources\PartitionResource;
 use App\Models\Partition;
+use App\Models\Payment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -105,7 +106,9 @@ class PartitionController extends Controller
     {
         $this->authorize('delete', $partition);
 
-        $partition->contracts()->delete();
+        Payment::whereIn('contract_id', $partition->contracts()->pluck('id'))->delete();
+        $partition->contracts()->forceDelete();
+        $partition->security_deposits()->delete();
         $partition->delete();
         return response()->noContent();
     }

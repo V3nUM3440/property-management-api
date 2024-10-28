@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\BuildingResource;
 use App\Http\Resources\Core\AppAnonymousResourceCollection;
 use App\Models\Building;
+use App\Models\Payment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -83,7 +84,18 @@ class BuildingController extends Controller
     {
         $this->authorize('delete', $building);
 
+        foreach($building->units as $unit) {
+            Payment::whereIn('contract_id', $unit->contracts()->pluck('id'))->delete();
+            $unit->contracts()->forceDelete();
+            $unit->security_deposits()->delete();
+        }
+        foreach($building->partitions as $partition) {
+            Payment::whereIn('contract_id', $partition->contracts()->pluck('id'))->delete();
+            $partition->contracts()->forceDelete();
+            $partition->security_deposits()->delete();
+        }
         $building->delete();
+
         return response()->noContent();
     }
 }

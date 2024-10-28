@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Core\AppAnonymousResourceCollection;
 use App\Http\Resources\UnitResource;
+use App\Models\Payment;
 use App\Models\Unit;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -126,7 +127,9 @@ class UnitController extends Controller
     {
         $this->authorize('delete', $unit);
 
-        $unit->contracts()->delete();
+        Payment::whereIn('contract_id', $unit->contracts()->pluck('id'))->delete();
+        $unit->contracts()->forceDelete();
+        $unit->security_deposits()->delete();
         $unit->delete();
         return response()->noContent();
     }
