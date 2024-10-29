@@ -177,7 +177,7 @@ class ContractController extends Controller
             }
 
             $contract = $mainTenant->contracts()->create($data['contract']);
-            $contract->update([ 'reference' => '#'.str_pad($contract->id, 9, "0", STR_PAD_LEFT) ]);
+            $contract->update([ 'reference' => 'CN-' . str_pad($contract->id, 5, "0", STR_PAD_LEFT) ]);
             return $contract;
         });
 

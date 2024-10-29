@@ -102,7 +102,7 @@ class PaymentController extends Controller
         ]);
 
         $payment = Payment::create($data);
-        $payment->update([ 'reference' => '#'.str_pad($payment->id, 9, "0", STR_PAD_LEFT) ]);
+        $payment->update([ 'reference' => 'PY-'.str_pad($payment->id, 5, "0", STR_PAD_LEFT) ]);
 
         return new PaymentResource($payment);
     }
