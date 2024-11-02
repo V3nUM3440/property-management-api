@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
         // $this->call([BuildingSeeder::class]);
 
-        Permission::create(['name' => 'delete tenants']);
+        Permission::create(['name' => 'edit contracts']);
         Role::where('name', 'super-admin')->first()->givePermissionTo(Permission::all());
     }
 }

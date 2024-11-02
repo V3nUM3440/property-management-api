@@ -184,6 +184,22 @@ class ContractController extends Controller
         return new ContractResource($contract->load('tenant.subtenants', 'tenant.security_deposit'));
     }
 
+    public function update(Request $request, Contract $contract): ContractResource
+    {
+        $this->authorize('update', $contract);
+
+        $data = $request->validate([
+            'rent' => ['sometimes', 'numeric'],
+            'discount' => ['sometimes', 'nullable', 'numeric'],
+            'start_date' => ['sometimes', 'date'],
+            'end_date' => ['sometimes', 'date'],
+        ]);
+        $data['discount'] = $data['discount'] ?? 0;
+        $contract->update($data);
+
+        return new ContractResource($contract->load('tenant.subtenants', 'tenant.security_deposit'));
+    }
+
     public function destroy(Contract $contract): Response
     {
         $this->authorize('delete', $contract);

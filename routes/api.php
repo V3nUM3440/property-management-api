@@ -36,7 +36,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     ]);
     Route::apiResource('permissions', PermissionController::class)->only(['index']);
     Route::get('/contracts/rent-stats', [ContractController::class, 'rentStats'])->name('contracts.rent-stats');
-    Route::apiResource('contracts', ContractController::class)->except(['update']);
+    Route::apiResource('contracts', ContractController::class);
     Route::apiResource('tenants', TenantController::class);
     Route::apiResource('payments', PaymentController::class);
     Route::apiResource('users', UserController::class);
