@@ -204,7 +204,12 @@ class ContractController extends Controller
     {
         $this->authorize('delete', $contract);
 
-        $contract->delete();
+        if ($contract->deleted_at) {
+            $contract->payments()->delete();
+            $contract->forceDelete();
+        } else {
+            $contract->delete();
+        }
         return response()->noContent();
     }
 
